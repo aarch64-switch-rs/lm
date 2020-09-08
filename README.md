@@ -1,2 +1,3 @@
 # lm
-Nintendo Switch's LogManager replacement (redirecting logs to SD), made in pure Rust 
+
+This is a lm (LogManager) replacement/reimplementation in pure Rust, redirecting logs to binary files on the SD card (inside `/lm-rs`)

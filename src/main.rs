@@ -26,7 +26,7 @@ use core::panic;
 mod ipc;
 mod logger;
 
-static mut STACK_HEAP: [u8; 0x20000] = [0; 0x20000];
+static mut STACK_HEAP: [u8; 0x40000] = [0; 0x40000];
 
 #[no_mangle]
 pub fn initialize_heap(_hbl_heap: util::PointerAndSize) -> util::PointerAndSize {
@@ -65,12 +65,12 @@ pub fn pm_module_thread_fn(_: *mut u8) {
 
 #[no_mangle]
 pub fn main() -> Result<()> {
-    thread::get_current_thread().name.set_str("lm-rs.Main")?;
+    thread::get_current_thread().name.set_str("lm.Main")?;
     logger::initialize()?;
-    let mut pm_module_thread = thread::Thread::new(pm_module_thread_fn, core::ptr::null_mut(), core::ptr::null_mut(), 0x2000, "lm-rs.PmModule")?;
+    let mut pm_module_thread = thread::Thread::new(pm_module_thread_fn, core::ptr::null_mut(), core::ptr::null_mut(), 0x2000, "lm.PmModule")?;
     pm_module_thread.create_and_start(38, -2)?;
 
-    const POINTER_BUF_SIZE: usize = 0;
+    const POINTER_BUF_SIZE: usize = 0x400;
     let mut manager: server::ServerManager<POINTER_BUF_SIZE> = server::ServerManager::new();
     manager.register_service_server::<ipc::LogService>()?;
     manager.loop_process()?;
@@ -81,8 +81,6 @@ pub fn main() -> Result<()> {
 }
 
 #[panic_handler]
-fn panic_handler(_info: &panic::PanicInfo) -> ! {
-    // TODO: proper panic system made for this specific process
-    assert::assert(assert::AssertMode::FatalThrow, results::lib::assert::ResultAssertionFailed::make())
-    // util::on_panic_handler::<nx::diag::log::LmLogger>(info, assert::AssertMode::FatalThrow, results::lib::assert::ResultAssertionFailed::make())
+fn panic_handler(info: &panic::PanicInfo) -> ! {
+    util::on_panic_handler::<logger::SelfLogger>(info, assert::AssertMode::FatalThrow, results::lib::assert::ResultAssertionFailed::make())
 }

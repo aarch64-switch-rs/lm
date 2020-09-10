@@ -35,13 +35,17 @@ impl sf::IObject for Logger {
 
 impl ILogger for Logger {
     fn log(&mut self, log_buf: sf::InAutoSelectBuffer) -> Result<()> {
+        diag_log!(logger::SelfLogger { nx::diag::log::LogSeverity::Trace, false } => "Logging with buffer ({:p}, 0x{:X})", log_buf.buf, log_buf.size);
+
         logger::log_packet_buf(log_buf.buf, log_buf.size, self.program_id);
         Ok(())
     }
 
     fn set_destination(&mut self, log_destination: lm::LogDestination) -> Result<()> {
         // TODO: make use of log destination?
+        diag_log!(logger::SelfLogger { nx::diag::log::LogSeverity::Trace, false } => "Setting destination 0x{:X}", log_destination.get());
         self.log_destination = log_destination;
+
         Ok(())
     }
 }
@@ -70,7 +74,8 @@ impl ILogService for LogService {
     fn open_logger(&mut self, process_id: sf::ProcessId) -> Result<mem::Shared<dyn sf::IObject>> {
         let pminfo = service::new_service_object::<pm::InformationInterface>()?;
         let program_id = pminfo.get().get_program_id(process_id.process_id)?;
-        
+        diag_log!(logger::SelfLogger { nx::diag::log::LogSeverity::Trace, false } => "Opening logger for program ID 0x{:016X}", program_id);
+
         Ok(mem::Shared::new(Logger::new(program_id)))
     }
 }

@@ -1,5 +1,5 @@
 {
-    "name": "LogManager.Rust",
+    "name": "LogManager",
     "title_id": "0x0100000000000015",
     "title_id_range_min": "0x0100000000000015",
     "title_id_range_max": "0x0100000000000015",
@@ -20,8 +20,8 @@
         {
             "type": "kernel_flags",
             "value": {
-                "highest_thread_priority": 63,
-                "lowest_thread_priority": 24,
+                "highest_thread_priority": 24,
+                "lowest_thread_priority": 63,
                 "lowest_cpu_id": 3,
                 "highest_cpu_id": 3
             }

@@ -27,7 +27,7 @@ fn main() {
         let mut log_packet_ok = false;
         if let Ok(entry) = entry_v {
             let file_path = entry.path();
-            if let Ok(tick) = u64::from_str_radix(entry.file_name().to_string_lossy().trim_start_matches("0x").trim_end_matches(".bin"), 16) {
+            if let Ok(tick) = u64::from_str_radix(entry.file_name().to_string_lossy().trim_start_matches("0x").trim_end_matches(".nxbinlog"), 16) {
                 if let Ok(mut file) = fs::File::open(&file_path) {
                     if let Ok(file_metadata) = fs::metadata(&file_path) {
                         let mut data: Vec<u8> = vec![0; file_metadata.len() as usize];

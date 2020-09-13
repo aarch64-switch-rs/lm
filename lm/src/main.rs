@@ -21,6 +21,7 @@ use nx::service;
 use nx::service::psc;
 use nx::service::psc::IPmModule;
 use nx::service::psc::IPmService;
+use nx::fs;
 use core::panic;
 
 mod ipc;
@@ -66,7 +67,8 @@ type Manager = server::ServerManager<POINTER_BUF_SIZE>;
 #[no_mangle]
 pub fn main() -> Result<()> {
     thread::get_current_thread().name.set_str("lm.Main")?;
-    logger::initialize()?;
+    fs::initialize()?;
+    fs::mount_sd_card("sdmc")?;
     let mut pm_module_thread = thread::Thread::new(pm_module_thread_fn, core::ptr::null_mut(), core::ptr::null_mut(), 0x2000, "lm.PmModule")?;
     pm_module_thread.create_and_start(38, -2)?;
 
@@ -75,7 +77,7 @@ pub fn main() -> Result<()> {
     manager.loop_process()?;
 
     pm_module_thread.join()?;
-    logger::exit();
+    fs::finalize();
     Ok(())
 }
 

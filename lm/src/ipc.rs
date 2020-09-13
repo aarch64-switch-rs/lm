@@ -29,10 +29,10 @@ impl sf::IObject for Logger {
     }
 
     fn get_command_table(&self) -> sf::CommandMetadataTable {
-        ipc_server_make_command_table! {
-            log: 0,
-            set_destination: 1
-        }
+        vec! [
+            ipc_interface_make_command_meta!(log: 0),
+            ipc_interface_make_command_meta!(set_destination: 1, [(3, 0, 0) =>])
+        ]
     }
 }
 
@@ -45,6 +45,7 @@ impl ILogger for Logger {
     }
 
     fn set_destination(&mut self, log_destination: lm::LogDestination) -> Result<()> {
+        // Note: in official code, log destination is a global variable (not stored in the logger interface like here)
         // TODO: make use of log destination?
         diag_log!(logger::SelfLogger { nx::diag::log::LogSeverity::Trace, false } => "Setting destination 0x{:X}", log_destination.get());
         self.log_destination = log_destination;
@@ -63,9 +64,9 @@ impl sf::IObject for LogService {
     }
 
     fn get_command_table(&self) -> sf::CommandMetadataTable {
-        ipc_server_make_command_table! {
-            open_logger: 0
-        }
+        vec! [
+            ipc_interface_make_command_meta!(open_logger: 0)
+        ]
     }
 }
 

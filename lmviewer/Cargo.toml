@@ -5,4 +5,4 @@ authors = ["XorTroll"]
 edition = "2018"
 
 [dependencies]
-logpacket = { path = "../../logpacket" } #{ git = "https://github.com/aarch64-switch-rs/logpacket" }
+logpacket = { git = "https://github.com/aarch64-switch-rs/logpacket" }

@@ -1,0 +1,8 @@
+[package]
+name = "lmviewer"
+version = "0.1.0"
+authors = ["XorTroll"]
+edition = "2018"
+
+[dependencies]
+logpacket = { path = "../../logpacket" } #{ git = "https://github.com/aarch64-switch-rs/logpacket" }

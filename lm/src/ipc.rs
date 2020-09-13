@@ -5,6 +5,9 @@ use nx::ipc::server;
 use nx::ipc::sf::lm;
 use nx::ipc::sf::lm::ILogger;
 use nx::ipc::sf::lm::ILogService;
+use nx::service;
+use nx::service::pm;
+use nx::service::pm::IInformationInterface;
 
 use crate::logger;
 
@@ -65,10 +68,6 @@ impl sf::IObject for LogService {
         }
     }
 }
-
-use crate::service;
-use crate::service::pm;
-use crate::service::pm::IInformationInterface;
 
 impl ILogService for LogService {
     fn open_logger(&mut self, process_id: sf::ProcessId) -> Result<mem::Shared<dyn sf::IObject>> {

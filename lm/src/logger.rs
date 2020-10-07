@@ -32,6 +32,11 @@ impl LogBinaryHeader {
     }
 }
 
+pub fn initialize() -> Result<()> {
+    let _ = fs::delete_directory(String::from(BASE_LOG_DIR));
+    fs::create_directory(String::from(BASE_LOG_DIR))
+}
+
 fn log_packet_buf_impl(packet_buf: *const u8, packet_buf_size: usize, bin_header: LogBinaryHeader, log_dir: String, log_buf_file: String) -> Result<()> {
     unsafe {
         if G_ENABLED.get_val() {
@@ -53,8 +58,6 @@ fn log_self_impl(self_msg: String, log_dir: String, log_buf_file: String) -> Res
         if G_ENABLED.get_val() {
             let _ = fs::create_directory(String::from(BASE_LOG_DIR));
             let _ = fs::create_directory(log_dir);
-
-            let _ = fs::delete_file(log_buf_file.clone());
 
             let mut log_file = fs::open_file(log_buf_file, fs::FileOpenOption::Create() | fs::FileOpenOption::Write() | fs::FileOpenOption::Append())?;
             log_file.write(self_msg.as_ptr(), self_msg.len())?;

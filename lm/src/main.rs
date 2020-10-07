@@ -10,7 +10,6 @@ extern crate alloc;
 extern crate paste;
 
 use nx::result::*;
-use nx::results;
 use nx::util;
 use nx::wait;
 use nx::thread;
@@ -27,12 +26,13 @@ use core::panic;
 mod ipc;
 mod logger;
 
-static mut STACK_HEAP: [u8; 0x20000] = [0; 0x20000];
+const STACK_HEAP_SIZE: usize = 0x8000;
+static mut STACK_HEAP: [u8; STACK_HEAP_SIZE] = [0; STACK_HEAP_SIZE];
 
 #[no_mangle]
 pub fn initialize_heap(_hbl_heap: util::PointerAndSize) -> util::PointerAndSize {
     unsafe {
-        util::PointerAndSize::new(STACK_HEAP.as_mut_ptr(), STACK_HEAP.len())
+        util::PointerAndSize::new(STACK_HEAP.as_mut_ptr(), STACK_HEAP_SIZE)
     }
 }
 
@@ -69,6 +69,7 @@ pub fn main() -> Result<()> {
     thread::get_current_thread().name.set_str("lm.Main")?;
     fs::initialize()?;
     fs::mount_sd_card("sdmc")?;
+    logger::initialize()?;
     let mut pm_module_thread = thread::Thread::new(pm_module_thread_fn, core::ptr::null_mut(), core::ptr::null_mut(), 0x2000, "lm.PmModule")?;
     pm_module_thread.create_and_start(38, -2)?;
 
@@ -83,5 +84,5 @@ pub fn main() -> Result<()> {
 
 #[panic_handler]
 fn panic_handler(info: &panic::PanicInfo) -> ! {
-    util::on_panic_handler::<logger::SelfLogger>(info, assert::AssertMode::FatalThrow, results::lib::assert::ResultAssertionFailed::make())
+    util::simple_panic_handler::<logger::SelfLogger>(info, assert::AssertMode::FatalThrow)
 }

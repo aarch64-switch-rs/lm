@@ -24,7 +24,6 @@ fn main() {
     
     let mut log_packet_table: Vec<(u64, LogPacket)> = Vec::new();
     for entry_v in fs::read_dir(search_dir).unwrap() {
-        let mut log_packet_ok = false;
         if let Ok(entry) = entry_v {
             let file_path = entry.path();
             if let Ok(tick) = u64::from_str_radix(entry.file_name().to_string_lossy().trim_start_matches("0x").trim_end_matches(".nxbinlog"), 16) {
@@ -33,7 +32,6 @@ fn main() {
                         let mut data: Vec<u8> = vec![0; file_metadata.len() as usize];
                         if let Ok(_) = file.read(&mut data) {
                             if let Some(log_packet) = LogPacket::from(data) {
-                                log_packet_ok = true;
                                 if !log_packet.is_head() {
                                     if let Some(ref mut last_log_packet) = log_packet_table.last_mut() {
                                         last_log_packet.1.try_join(log_packet);
@@ -42,13 +40,25 @@ fn main() {
                                 }
                                 log_packet_table.push((tick, log_packet));
                             }
+                            else {
+                                println!("Invalid log packet: {:?}", entry);
+                            }
+                        }
+                        else {
+                            println!("Invalid file read: {:?}", entry);
                         }
                     }
+                    else {
+                        println!("Invalid file metadata: {:?}", entry);
+                    }
+                }
+                else {
+                    println!("Unable to open file: {:?}", entry);
                 }
             }
-        }
-        if !log_packet_ok {
-            println!("Unable to load log packet!");
+            else {
+                println!("Invalid log file name: {:?}", entry);
+            }
         }
     }
 

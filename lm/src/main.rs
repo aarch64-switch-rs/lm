@@ -73,7 +73,7 @@ pub fn main() -> Result<()> {
     let mut pm_module_thread = thread::Thread::new(pm_module_thread_fn, core::ptr::null_mut(), core::ptr::null_mut(), 0x2000, "lm.PmModule")?;
     pm_module_thread.create_and_start(38, -2)?;
 
-    let mut manager = Manager::new();
+    let mut manager = Manager::new()?;
     manager.register_service_server::<ipc::LogService>()?;
     manager.loop_process()?;
 

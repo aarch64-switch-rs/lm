@@ -1,6 +1,8 @@
 # lm
 
-This is a lm (LogManager) replacement/reimplementation in pure Rust, redirecting logs to binary files on the SD card (inside `/lm-rs`)
+This project is a POC lm/LogManager replacement in pure Rust, redirecting logs to binary files on the SD card, inside `/lm-rs`.
+
+Note that this implementation of the LogManager process is far from replicating the actual process, since it's just more like an example of what can be done with this organization's tools.
 
 ## lmviewer
 

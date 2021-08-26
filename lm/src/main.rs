@@ -57,7 +57,7 @@ pub fn pm_module_main() -> Result<()> {
     Ok(())
 }
 
-pub fn pm_module_thread_fn(_: *mut u8) {
+pub fn pm_module_thread() {
     pm_module_main().unwrap();
 }
 
@@ -70,8 +70,10 @@ pub fn main() -> Result<()> {
     fs::initialize()?;
     fs::mount_sd_card("sdmc")?;
     logger::initialize()?;
-    let mut pm_module_thread = thread::Thread::new(pm_module_thread_fn, core::ptr::null_mut(), core::ptr::null_mut(), 0x2000, "lm.PmModule")?;
-    pm_module_thread.create_and_start(38, -2)?;
+
+    let mut pm_module_thread = thread::Thread::new(pm_module_thread, "lm.PmModule", 0x2000)?;
+    pm_module_thread.initialize(38, -2)?;
+    pm_module_thread.start()?;
 
     let mut manager = Manager::new()?;
     manager.register_service_server::<ipc::LogService>()?;

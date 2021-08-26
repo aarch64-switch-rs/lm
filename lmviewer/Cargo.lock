@@ -10,4 +10,4 @@ dependencies = [
 [[package]]
 name = "logpacket"
 version = "0.1.0"
-source = "git+https://github.com/aarch64-switch-rs/logpacket#eb8b99fcb822f396f6fd937b9d2efd46d85a6061"
+source = "git+https://github.com/aarch64-switch-rs/logpacket#d807c993fb4578e3809d91e3484c7d97f59eb3db"

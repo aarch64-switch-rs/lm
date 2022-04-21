@@ -1,4 +1,6 @@
-# lm
+# IMPORTANT: this example/POC has been moved to the [examples]([https://github](https://github.com/aarch64-switch-rs/examples)) repo!
+
+## lm
 
 This project is a POC lm/LogManager replacement in pure Rust, redirecting logs to binary files on the SD card, inside `/lm-rs`.
 

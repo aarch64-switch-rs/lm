@@ -1,4 +1,4 @@
-# IMPORTANT: this example/POC has been moved to the [examples]([https://github](https://github.com/aarch64-switch-rs/examples)) repo!
+# IMPORTANT: this example/POC has been moved to the [examples](https://github.com/aarch64-switch-rs/examples) repo!
 
 ## lm
 
